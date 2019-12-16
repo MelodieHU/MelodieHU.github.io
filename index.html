@@ -11,6 +11,7 @@ title: Blogs witness life.
         <a class="nice-title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
         <p class="nice-text">{{ post.content | strip_html | truncatewords: 50 }} <a href="{{ post.url | relative_url }}">Read more!</a></p>
     </li>
+    <hr style="filter: alpha(opacity=100, finishopacity=0, style=3)" width="80%" color=#987cb9 SIZE=3>
     {% endfor %}
     {% include pagination.html %}
 </ul>
