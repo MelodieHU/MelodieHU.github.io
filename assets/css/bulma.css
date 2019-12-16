@@ -26,9 +26,7 @@ body,
 p,
 ol,
 ul,
-li {
-  border-bottom: solid #c9c9c9 1px;
-}
+li,
 dl,
 dt,
 dd,
