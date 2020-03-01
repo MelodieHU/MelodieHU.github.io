@@ -1,55 +1,183 @@
 ---
 layout: post
-title: My Test
-date: "2019-02-28 13:30:00 -0700"
+title: Theoretical questions
+date: "2020-02-28 13:30:00 -0700"
 tags: [test, markdown, docs]
 ---
 
-You can write regular [markdown](https://markdowntutorial.com/) here and Jekyll will automatically convert it to a nice webpage.  I strongly encourage you to [take 5 minutes to learn how to write in markdown](https://markdowntutorial.com/) - it'll teach you how to transform regular text into bold/italics/headings/tables/etc.
 
-<!--more-->
-
-**Here is some bold text**
-
-## Here is a secondary heading
-
-Here's a useless table:
-
-| Number | Next number | Previous number |
-| :------ |:--- | :--- |
-| Five | Six | Four |
-| Ten | Eleven | Nine |
-| Seven | Eight | Six |
-| Two | Three | One |
+# Theoretical questions HU Xiwei
 
 
-How about a yummy crepe?
+# OLS
 
-![Crepe](https://s3-media3.fl.yelpcdn.com/bphoto/cQ1Yoa75m2yUFFbY2xwuqw/348s.jpg)
+* We have $\mathbb{E}(\tilde{\beta}) = \mathbb{E}(Hy + Dy) = \mathbb{E}(Hy) + \mathbb{E}(Dy) = \mathbb{E}(\beta^*) + \mathbb{E}(Dy)$. 
+With the assumption of OLS that uncorrelated errors $\mathbb{C}ov(\sigma_i, \sigma_j | x_i, x_j) = 0$ for $i \neq j$, we have $\mathbb{V}ar(\tilde{\beta}) = \mathbb{V}ar(Hy) + \mathbb{V}ar(Dy) = \mathbb{V}ar(\beta^*) + \mathbb{V}ar(Dy) \geq \mathbb{V}ar(\beta^*)$. When $\mathbb{V}ar(Dy) > 0$, we have $\mathbb{V}ar(\beta^*) < \mathbb{V}ar(\tilde{\beta})$.
 
-Here's a code chunk:
+# Ridge regression
 
-~~~
-var foo = function(x) {
-  return(x + 5);
-}
-foo(3)
-~~~
+* We have $\beta^*_{ridge} = arg\min_{\beta}\{||y_c - x_c\beta||^2 + \lambda||\beta||^2\}$. Soit $f(\beta) = ||y_c - x_c\beta||^2 + \lambda||\beta||^2$, we have
+\begin{equation}
+\nabla f(\beta) = 2(-x_c^T)(y_c - x_c\beta) + 2\lambda I_p\beta
+\end{equation}
+So for $\beta^*_{ridge}$, we have 
+\begin{equation}
+(x_c^Tx_c + \lambda I_p)\beta^*_{ridge} = x_c^Ty_c
+\end{equation}
+Suppose that $y_c = x_c\beta + \epsilon$ with $\mathbb{E}(\epsilon) = 0$, we have
+\begin{equation}
+\mathbb{E}((x_c^Tx_c + \lambda I_p)\beta^*_{ridge}) = \mathbb{E}(x_c^Tx_c\beta) + \mathbb{E}(x_c^T\epsilon)\\
+(x_c^Tx_c + \lambda I_p)\mathbb{E}(\beta^*_{ridge}) = (x_c^Tx_c + \lambda I_p)\beta - \lambda\beta\\
+\mathbb{E}(\beta^*_{ridge}) - \beta = (x_c^Tx_c + \lambda I_p)^{-1}\beta \neq 0
+\end{equation}
+As $\mathbb{E}(\beta^*_{ridge}) - \beta \neq 0$, the estimator of ridge regression is biased.
 
-And here is the same code with syntax highlighting:
 
-```javascript
-var foo = function(x) {
-  return(x + 5);
-}
-foo(3)
+* According to SVD decomposition, we have $x_c = UDV^T$ and $x_c^{-1} = VD^{-1}U^T$. With last question, we have $\beta^*_{ridge} = (x_c^Tx_c)^{-1}x_c^Ty_c$. We then have 
+\begin{equation}
+\begin{aligned}
+\beta^*_{ridge} &= (x_c^Tx_c+\lambda I_p)^{-1}x_c^Ty_c\\
+&= V(D^TD + \lambda I_p)^{-1} D^TU^T y_c
+\end{aligned}
+\end{equation}
+with 
+\begin{equation}
+\begin{aligned}
+(D^TD + \lambda I_p)^{-1} D^T &= 
+\begin{pmatrix}
+\frac{\sigma_1}{\sigma_1^2 + \lambda} & & & & \cdots\\
+ & \frac{\sigma_2}{\sigma_2^2 + \lambda} & & & \cdots\\
+  & & & \cdots & \cdots \\
+   & & & \frac{\sigma_p}{\sigma_p^2 + \lambda} & \cdots
+\end{pmatrix}
+\end{aligned}
+\end{equation} 
+and $(\sigma_1, \cdots, \sigma_p)$ singular values of $D$.
+When $\sigma_i \approx 0$, we have $\frac{\sigma_i}{\sigma_i^2 + \lambda} \approx 0$ if and only if $\lambda \neq 0$. This means that the coefficients of less important features will be close to $0$.
+
+* Known that $\mathbb{V}ar(\beta^*_{OLS}) = \sigma^2(x_c^Tx_c)^{-1} = \sigma^2 V(D^TD)^{-1}V^T$. And for $\mathbb{V}ar(\beta^*_{ridge})$:
+\begin{equation}
+\mathbb{V}ar((x_c^Tx_c + \lambda I_p)\beta^*_{ridge}) = \mathbb{V}ar(x_c^Ty_c)\\
+(x_c^Tx_c + \lambda I_p)^T\mathbb{V}ar(\beta^*_{ridge})(x_c^Tx_c + \lambda I_p) = \mathbb{V}ar(x_c^T\epsilon)\\
+\end{equation}
+\begin{equation}
+\begin{aligned}
+\mathbb{V}ar(\beta^*_{ridge}) &= (x_c^Tx_c + \lambda I_p)^{-1}x_c^T\sigma^2x_c(x_c^Tx_c + \lambda I_p)^{-1}\\
+&= \sigma^2V(D^TD+\lambda I_p)^{-1}(D^TD)(D^TD+\lambda I_p)^{-1}V^T
+\end{aligned}
+\end{equation}
+So for $\lambda \geq 0$, we have the diagonal elements $\frac{1}{\sigma_i^2} \geq \frac{\sigma_i^2}{(\sigma_i^2 +\lambda)^2}$ with $\sigma_i$  diagonal elements of $D$ , therefore, $\mathbb{V}ar(\beta^*_{OLS}) \geq \mathbb{V}ar(\beta^*_{ridge})$
+
+* When $\lambda$ increases, we have
+\begin{equation}
+\begin{aligned}
+bias &= \mathbb{E}(\beta^*_{ridge}) - \beta\\
+&= (x_c^Tx_c + \lambda I_p)^{-1}\beta\\ 
+&= V(D^TD + \lambda I_p)^{-1}V^T\beta
+\end{aligned}
+\end{equation}
+with 
+\begin{equation}
+\begin{aligned}
+(D^TD + \lambda I_p)^{-1} &= 
+\begin{pmatrix}
+\frac{1}{\sigma_1^2 + \lambda} & & & & \cdots\\
+ & \frac{1}{\sigma_2^2 + \lambda} & & & \cdots\\
+  & & & \cdots & \cdots \\
+   & & & \frac{1}{\sigma_p^2 + \lambda} & \cdots
+\end{pmatrix}
+\end{aligned}
+\end{equation} 
+So when $\lambda$ increases, we have $ \frac{1}{\sigma_i^2 + \lambda}$ tends $0$ and the bias tends to a diagonal matrix with $p$ $0$ and $(n-p)$ $1$ on its diagonal.
+For variance, we have
+\begin{equation}
+\begin{aligned}
+\mathbb{V}ar(\beta^*_{ridge}) &= (x_c^Tx_c + \lambda I_p)^{-1}x_c^T\sigma^2x_c(x_c^Tx_c + \lambda I_p)^{-1}\\
+&= \sigma^2V(D^TD+\lambda I_p)^{-1}(D^TD)(D^TD+\lambda I_p)^{-1}V^T
+\end{aligned}
+\end{equation}
+with
+\begin{equation}
+\begin{aligned}
+(D^TD+\lambda I_p)^{-1}(D^TD)(D^TD+\lambda I_p)^{-1} &= 
+\begin{pmatrix}
+\frac{\sigma_1^2}{(\sigma_1^2 + \lambda)^2} & & & & \cdots\\
+ & \frac{\sigma_2^2}{(\sigma_2^2 + \lambda)^2} & & & \cdots\\
+  & & & \cdots & \cdots \\
+   & & & \frac{\sigma_p^2}{(\sigma_p^2 + \lambda)^2} & \cdots
+\end{pmatrix}
+\end{aligned}
+\end{equation} 
+So when $\lambda$ increases, we have $ \frac{\sigma_i^2}{(\sigma_i^2 + \lambda)^2}$ tends $\frac{1}{\sigma_i^2}$ and the variance tends to a diagonal matrix with $p$ $\frac{1}{\sigma_i^2}$ and $(n-p)$ $0$ on its diagonal.
+
+* As $\beta^*_{OLS} = (x_c^Tx_c)^{-1}x_c^Ty_c$ and $\beta^*_{ridge} = (x_c^Tx_c + \lambda I_p)^{-1}x_c^Ty_c$, when setting $x_c^Tx_c = I_p$, we have $(1 + \lambda)\beta^*_{ridge} = \beta^*_{OLS}$. As a result, $\beta^*_{ridge} = \frac{\beta^*_{OLS}}{1 + \lambda}$
+
+# Elastic Net
+
+Elastic Net regularization can be formulated as
+
+\begin{equation}
+\begin{aligned}
+\beta^*_{ELNet} &= \arg\min_{\beta}(y_c - x_c\beta)^T(y_c - x_c\beta) + \lambda[\alpha(\sum_{j=1}^d{\beta_j^2}) + (1 - \alpha)(\sum_{j=1}^d{|\beta_j|})]\\
+\end{aligned}
+\end{equation}
+
+Supposing that $x_c^Tx_c = I_d$, we have $\beta^*_{OLS} = x_c^Ty_c$ and
+\begin{equation}
+\begin{aligned}
+\beta^*_{ELNet} &= \arg\min_{\beta} y_c^Ty_c - 2y_c^Tx_c\beta + \beta^T\beta + \lambda[\alpha(\sum_{j=1}^d{\beta_j^2}) + (1 - \alpha)(\sum_{j=1}^d{|\beta_j|})]\\
+&= \arg\min_{\beta} \sum_{i=1}^{d}- 2(\beta_{OLS}^*)_i\beta_i + \beta_i^2 + \lambda\alpha\beta_i^2 + \lambda(1 - \alpha)|\beta_i|\\
+\end{aligned}
+\end{equation}
+
+Fix a certain $i$, we want to calculate
+\begin{equation}
+\begin{aligned}
+(\beta^*_{ELNet})_i &= \arg\min_{\beta_i} -2(\beta_{OLS}^*)_i\beta_i + (\lambda\alpha + 1)\beta_i^2 + \lambda(1 - \alpha)|\beta_i|\\
+\end{aligned}
+\end{equation}
+
+Note that we always need to make $\beta_i$ have the same sign of $(\beta_{OLS}^*)_i$, otherwise we could flip its sign and get a lower value for the objective function.
+
+**Case 1**: $(\beta_{OLS}^*)_i > 0$ and $\beta_i \geq 0$, 
+\begin{equation}
+\begin{aligned}
+(\beta^*_{ELNet})_i &= \arg\min_{\beta_i} -2(\beta_{OLS}^*)_i\beta_i + (\lambda\alpha + 1)\beta_i^2 + \lambda(1 - \alpha)\beta_i\\
+&= \frac{\beta_{OLS}^* - \frac{(1-\alpha)\lambda}{2}}{1 + \alpha\lambda}\\
+&= \frac{\beta_{OLS}^* - \frac{\lambda_1}{2}}{1 + \lambda_2}, \lambda_1 = (1-\alpha)\lambda, \lambda_2 = \alpha\lambda.
+\end{aligned}
+\end{equation}
+
+**Case 2**: $(\beta_{OLS}^*)_i \leq 0$ and $\beta_i \leq 0$, 
+\begin{equation}
+\begin{aligned}
+(\beta^*_{ELNet})_i &= \arg\min_{\beta_i} -2(\beta_{OLS}^*)_i\beta_i + (\lambda\alpha + 1)\beta_i^2 - \lambda(1 - \alpha)\beta_i\\
+&= \frac{\beta_{OLS}^* + \frac{(1-\alpha)\lambda}{2}}{1 + \alpha\lambda}\\
+&= \frac{\beta_{OLS}^* + \frac{\lambda_1}{2}}{1 + \lambda_2}, \lambda_1 = (1-\alpha)\lambda, \lambda_2 = \alpha\lambda.
+\end{aligned}
+\end{equation}
+
+**Finally**, we get $\beta_{ELNet}^* = \frac{(\beta_{OLS}^*)_j \pm \frac{\lambda_1}{2}}{1 + \lambda_2}$ with $\lambda_1 = (1-\alpha)\lambda, \lambda_2 = \alpha\lambda$.
+
+# LDA
+
+* When each class $k$ has its own covariance matrix $\Sigma_k$, we get
+\begin{equation}
+\begin{aligned}
+f^*(x_j) &= \arg\max_k\frac{1}{\sqrt{(2\pi)^d|\Sigma_k|}}\exp(-\frac{(x_j-\mu_k)^T\Sigma_k^{-1}(x_j-\mu_k)}{2})\pi_k\\
+&=\arg\max_k\ln(\frac{1}{\sqrt{(2\pi)^d|\Sigma_k|}}\exp(-\frac{(x_j-\mu_k)^T\Sigma_k^{-1}(x_j-\mu_k)}{2})\pi_k)\\
+&= \arg\max_k -\frac{1}{2}\ln(|\Sigma_k|) - \frac{1}{2}(x_j-\mu_k)^T\Sigma_k^{-1}(x_j-\mu_k) + \ln(\pi_k)\\
+\end{aligned}
+\end{equation}
+where $\mu_k$ and $\Sigma_k$ are estimated by the given training set $\tau$:
+\begin{equation}
+\mu_k = \frac{1}{\#\{i: y_i = k, y_i\in\tau\}}\sum_{i: y_i = k, x_i\in\tau}{x_i}\\
+\Sigma_k = \frac{1}{\#\{i: y_i = k, y_i\in\tau\}}\sum_{i: y_i = k, x_i\in\tau}{(x_i-\mu_k)(x_i-\mu_k)^T}
+\end{equation}
+
+* Clearly, with different $\Sigma_k$, we can no longer throw away the quadratic terms. This discriminant function is a quadratic function and will contain second order terms. As a result, the solution is a quadratic discriminant function and it is called Quadratic Discriminant Analysis (QDA).
+
+
+```python
+
 ```
-
-And here is the same code yet again but with line numbers:
-
-{% highlight javascript linenos %}
-var foo = function(x) {
-  return(x + 5);
-}
-foo(3)
-{% endhighlight %}
