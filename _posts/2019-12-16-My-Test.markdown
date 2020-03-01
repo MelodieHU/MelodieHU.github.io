@@ -1,3 +1,9 @@
+---
+layout: post
+title: Theoretical questions
+date: "2020-02-28 13:30:00 -0700"
+tags: [test, markdown, docs]
+---
 <head>
     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
     <script type="text/x-mathjax-config">
@@ -9,20 +15,13 @@
         });
     </script>
 </head>
----
-layout: post
-title: Theoretical questions
-date: "2020-02-28 13:30:00 -0700"
-tags: [test, markdown, docs]
----
-
 
 # Theoretical questions HU Xiwei
 
 
 # OLS
 
-* We have $$\mathbb{E}(\tilde{\beta}) = \mathbb{E}(Hy + Dy) = \mathbb{E}(Hy) + \mathbb{E}(Dy) = \mathbb{E}(\beta^*) + \mathbb{E}(Dy)$$. 
+* We have $\mathbb{E}(\tilde{\beta}) = \mathbb{E}(Hy + Dy) = \mathbb{E}(Hy) + \mathbb{E}(Dy) = \mathbb{E}(\beta^*) + \mathbb{E}(Dy)$. 
 With the assumption of OLS that uncorrelated errors $\mathbb{C}ov(\sigma_i, \sigma_j | x_i, x_j) = 0$ for $i \neq j$, we have $\mathbb{V}ar(\tilde{\beta}) = \mathbb{V}ar(Hy) + \mathbb{V}ar(Dy) = \mathbb{V}ar(\beta^*) + \mathbb{V}ar(Dy) \geq \mathbb{V}ar(\beta^*)$. When $\mathbb{V}ar(Dy) > 0$, we have $\mathbb{V}ar(\beta^*) < \mathbb{V}ar(\tilde{\beta})$.
 
 # Ridge regression
