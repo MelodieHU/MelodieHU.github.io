@@ -22,7 +22,9 @@ tags: [test, markdown, docs]
 # OLS
 
 * We have $\mathbb{E}(\tilde{\beta}) = \mathbb{E}(Hy + Dy) = \mathbb{E}(Hy) + \mathbb{E}(Dy) = \mathbb{E}(\beta^*) + \mathbb{E}(Dy)$. 
-With the assumption of OLS that uncorrelated errors $\mathbb{C}ov(\sigma_i, \sigma_j | x_i, x_j) = 0$ for $i \neq j$, we have $\mathbb{V}ar(\tilde{\beta}) = \mathbb{V}ar(Hy) + \mathbb{V}ar(Dy) = \mathbb{V}ar(\beta^*) + \mathbb{V}ar(Dy) \geq \mathbb{V}ar(\beta^*)$. When $\mathbb{V}ar(Dy) > 0$, we have $\mathbb{V}ar(\beta^*) < \mathbb{V}ar(\tilde{\beta})$.
+With the assumption of OLS that uncorrelated errors $\mathbb{C}ov(\sigma_i, \sigma_j | x_i, x_j) = 0$ for $i \neq j$, we have $$\mathbb{V}ar(\tilde{\beta}) = \mathbb{V}ar(Hy) + \mathbb{V}ar(Dy) = \mathbb{V}ar(\beta^*) + \mathbb{V}ar(Dy) \geq \mathbb{V}ar(\beta^* )$$. 
+
+* When $\mathbb{V}ar(Dy) > 0$, we have $\mathbb{V}ar(\beta^*) < \mathbb{V}ar(\tilde{\beta})$.
 
 # Ridge regression
 
